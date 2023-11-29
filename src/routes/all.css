@@ -1,0 +1,28 @@
+
+.search_results{
+    position: absolute;
+    top: 50px;
+    left: 200px;
+    z-index: 3;
+    background-color: rgba(0, 0, 0, 0.2 );
+    width: 100%;
+    overflow: scroll;
+    height: 400px;
+}
+
+.utube_card{
+    text-decoration: none;
+    min-height: 100%;
+    width: 100%;
+    display: block;
+}
+
+.course_results{
+
+}
+
+.course_card{
+    text-decoration: none;
+    min-height: 100%;
+    width: 100%;
+}
