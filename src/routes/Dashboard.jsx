@@ -1,7 +1,7 @@
 import React, { useState} from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
-import {Container, Row, Col, Card, Spinner} from 'react-bootstrap';
+import {Container, Row, Col, Card, Spinner, Modal} from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -11,6 +11,12 @@ import { searchVideo, getVideoById, getVideoByUrl, getVideoByTitle } from 'utube
 import './all.css'
 
 function Dashboard() {
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+    const [loadingModal, setLoadingModal] = useState(false);
 
     const location = useLocation();
     const selectedCourse = location.state?.selectedCourse || 'No course selected';
@@ -30,30 +36,39 @@ function Dashboard() {
     
       const handleUrlSubmit = async (event) => {
         event.preventDefault();
+        handleShow();
+        setLoadingModal(true);
+
         try {
           const videoData = await getVideoByUrl(inputUrl, apiKey);
           setVideoInfo(videoData);
-          console.log(videoData)
+          setLoadingModal(false);
           setError('');
         } catch (error) {
             console.log(error.message)
           setError(`Error fetching video by URL: ${error.message}`);
+          setLoadingModal(false);
           setVideoInfo(null);
         }
       };
     
       const handleIdSubmit = async (event) => {
         event.preventDefault();
+        handleShow();
+        setLoadingModal(true);
         
         try {
           const videoData = await getVideoById(inputId, apiKey);
           if(videoData === undefined){
             setError(`No video with that id`);
+            setLoadingModal(false);
             return
           }
           setVideoInfo(videoData);
+          setLoadingModal(false);
           setError('');
         } catch (error) {
+          setLoadingModal(false);
           setError(`Error fetching video by ID: ${error.message}`);
           setVideoInfo(null);
         }
@@ -61,14 +76,19 @@ function Dashboard() {
     
       const handleTitleSubmit = async (event) => {
         event.preventDefault();
+        handleShow();
+        setLoadingModal(true);
+
         try {
           const videoData = await getVideoByTitle(inputTitle, apiKey);
           setVideoInfo(videoData);
           setError('');
+          setLoadingModal(false);
         } catch (error) {
+          setLoadingModal(false);
           setError(`Error fetching video by title: ${error.message}`);
-
           setVideoInfo(null);
+          
         }
       };
     
@@ -100,10 +120,12 @@ function Dashboard() {
 
     const closeSearchResults = () => {
         setSearchResults([]);
+        setErrorSearch('');
     }
 
     const closeErrorResults = () => {
-        setErrorSearch('')
+        setErrorSearch('');
+        setSearchResults([]);
     }
 
     return (
@@ -208,9 +230,10 @@ function Dashboard() {
                 </Row>
                 <Row  className='mt-5'>
                     <Col>
-                        Enjoy our special feature that allows you to search for learning videos based on the video title, url or id
+                        Enjoy our special feature that allows you to search for videos based on the video <i>title, url or id</i>
                     </Col>
                 </Row>
+                
                 <Row  className='mt-3'>
                     <Col xs ='6' lg = '4'>
                         <Form onSubmit={handleUrlSubmit}>
@@ -226,62 +249,83 @@ function Dashboard() {
                                 <Button className='mt-3' variant="primary" type="submit">Get Video by URL</Button>
                                 </Form.Group>
                         </Form>
+                        <p className='mt-2'><b>Sample Url:</b> https://www.youtube.com/watch?v=7ElHOhu7GgA</p>
                     </Col>
 
                     <Col xs ='6' lg = '4'>
-                    <Form onSubmit={handleIdSubmit}>
-                    <Form.Group controlId="idInput">
-                    <Form.Label>Enter Video ID:</Form.Label>
-                    <Form.Control
-                        type="text"
-                        value={inputId}
-                        onChange={(e) => setInputId(e.target.value)}
-                        placeholder="VIDEO_ID"
-                        required
-                    />
-                    <Button className='mt-3' variant="primary" type="submit">Get Video by ID</Button>
-                    </Form.Group>
-                </Form>
+                        <Form onSubmit={handleIdSubmit}>
+                            <Form.Group controlId="idInput">
+                            <Form.Label>Enter Video ID:</Form.Label>
+                            <Form.Control
+                                type="text"
+                                value={inputId}
+                                onChange={(e) => setInputId(e.target.value)}
+                                placeholder="VIDEO_ID"
+                                required
+                            />
+                            <Button className='mt-3' variant="primary" type="submit">Get Video by ID</Button>
+                            </Form.Group>
+                        </Form>
+                        <p className='mt-2'><b>Sample Id:</b> p0nMcl2tN-4</p>
                     </Col>
 
                     <Col className='mt-3 mt-lg-0' xs ='6'  lg = '4'>
-                    <Form onSubmit={handleTitleSubmit}>
-                    <Form.Group controlId="titleInput">
-                    <Form.Label>Enter Video Title:</Form.Label>
-                    <Form.Control
-                        type="text"
-                        value={inputTitle}
-                        onChange={(e) => setInputTitle(e.target.value)}
-                        placeholder="Video Title"
-                        required
-                    />
-                    <Button className='mt-3' variant="primary" type="submit">Get Video by Title</Button>
-                    </Form.Group>
-                </Form>
+                        <Form onSubmit={handleTitleSubmit}>
+                            <Form.Group controlId="titleInput">
+                            <Form.Label>Enter Video Title:</Form.Label>
+                            <Form.Control
+                                type="text"
+                                value={inputTitle}
+                                onChange={(e) => setInputTitle(e.target.value)}
+                                placeholder="Video Title"
+                                required
+                            />
+                            <Button className='mt-3' variant="primary" type="submit">Get Video by Title</Button>
+                            </Form.Group>
+                        </Form>
+                        <p className='mt-2'><b>Sample Title:</b> The Complete Guide to Getting a Tech Job</p>
                     </Col>
 
                 </Row>
-
-                <Row className='mt-2'>
-                    <Col>
-                    {error && <p>Error: {error}</p>}
-                    </Col>
-
-                {videoInfo && (
-                <Col xs ='auto'>
-                    <a className='video_info' href={`https://www.youtube.com/watch?v=${videoInfo.id.videoId}`} target='_blank' rel="noreferrer">
-                    <Card>
-                        <Card.Img variant="top" src={videoInfo.snippet.thumbnails.default.url} alt={videoInfo.snippet.title}  />
-                        <Card.Body>
-                            <Card.Title>{videoInfo.snippet.title}</Card.Title>
-                            <Card.Text>
-                            </Card.Text>
-                        </Card.Body>
-                    </Card>
-                    </a>
-                </Col>
-                )}
-                </Row>
+            
+                <Modal show={show} onHide={handleClose}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Result</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                    {
+                        loadingModal ?
+                        <Row>
+                         <Col xs = 'auto'> <Spinner animation="border" /></Col>
+                        </Row>
+                        :
+                        <Row className=''>
+                        <Col>
+                            {error && <p>Error: {error}</p>}
+                        </Col>
+                        {videoInfo && (
+                            <Col xs ='auto'>
+                                <a className='video_info' href={`https://www.youtube.com/watch?v=${videoInfo.id.videoId}`} target='_blank' rel="noreferrer">
+                                <Card>
+                                    <Card.Img variant="top" src={videoInfo.snippet.thumbnails.default.url} alt={videoInfo.snippet.title}  />
+                                    <Card.Body>
+                                        <Card.Title>{videoInfo.snippet.title}</Card.Title>
+                                        <Card.Text>
+                                        </Card.Text>
+                                    </Card.Body>
+                                </Card>
+                                </a>
+                            </Col>
+                        )}
+                        </Row>
+                    }
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleClose}>
+                        Close
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
             </Container>
         </>
     );
