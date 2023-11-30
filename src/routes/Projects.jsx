@@ -1,7 +1,7 @@
 import React, { useState, useEffect} from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
-import {Container, Row, Col, Card }from 'react-bootstrap';
+import {Container, Row, Col, Card, Spinner }from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -11,7 +11,9 @@ function Projects() {
     const location = useLocation();
     const selectedCourse = location.state?.selectedCourse || 'No course selected';
 
-    const [searchQuery, setSearchQuery] = useState('');
+    const [loadingProjects, setLoadingProjects] = useState(true);
+
+    const [error, setError] = useState('');
     const [searchResults, setSearchResults] = useState([]);
 
     const API_KEY = 'AIzaSyDXtmxIH638wwtXK5Ly7AkOp1NoffKEx2M';
@@ -28,11 +30,21 @@ function Projects() {
             const response = await fetch(
                 `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=${searchProject}&key=${API_KEY}`
             );
+            if (!response.ok) {
+                if (response.status === 403) {
+                    throw new Error('Forbidden: You are not authorized to access this resource.');
+                
+                } else {
+                    throw new Error('Failed to fetch data.');
+                }
+            }
             const data = await response.json();
-            console.log(data.items)
             setSearchResults(data.items);
+            setLoadingProjects(false);
         } catch (error) {
+            setError(error.message); // Store the error message in state
             console.error('Error fetching search results:', error);
+            setLoadingProjects(false);
         }
     }
 
@@ -69,7 +81,12 @@ function Projects() {
                     </Col>
                 </Row>
                 <Row className=''>
-                    {searchResults.map((item) => (
+                    {
+                    loadingProjects ?
+                    <Col xs = 'auto'> <Spinner animation="border" /></Col>
+                    :
+                    searchResults.length > 0?
+                    searchResults.map((item) => (
                     <Col sm = '6' lg ="3" key={item.id.videoId} className='mb-2'>
                         <a className='course_card' href={`https://www.youtube.com/watch?v=${item.id.videoId}`} target='_blank' rel="noreferrer" onClick={() => showVideoDetails(item.id.videoId)}>
                         <Card>
@@ -82,7 +99,10 @@ function Projects() {
                         </Card>
                         </a>
                     </Col>
-                     ))}
+                     ))
+                    :
+                    <Col>{error}</Col>
+                    }
                 </Row>
             </Container>
         </>

@@ -15,6 +15,7 @@ function Dashboard() {
     const location = useLocation();
     const selectedCourse = location.state?.selectedCourse || 'No course selected';
 
+    const [errorSearch, setErrorSearch] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [loadingSearch, setLoadingSearch] = useState(false);
@@ -81,6 +82,7 @@ function Dashboard() {
             setSearchResults(data);
             setLoadingSearch(false);
         } catch (error) {
+            console.log(error.message)
             console.error('Error fetching search results:', error);
             setLoadingSearch(false);
         }
@@ -136,7 +138,7 @@ function Dashboard() {
                     </Row>
                </Container>
                 :
-                searchResults.length > 0 &&  
+                searchResults.length > 0 ?
                 <Container className='search_results'>
                         <Row className='justify-content-center p-3'>
                             <Col>
@@ -159,6 +161,14 @@ function Dashboard() {
                                 </Row>
                             </Col>
                         </Row>
+                </Container>
+                :
+                <Container>
+                    <Row>
+                        <Col>
+                            {error}
+                        </Col>
+                    </Row>
                 </Container>
             }
 
