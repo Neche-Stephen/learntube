@@ -76,15 +76,19 @@ function Dashboard() {
     const handleSearch = async (e) => {
         e.preventDefault();
         setLoadingSearch(true);
+        setSearchResults([]);
 
         try {
             const data = await searchVideo(searchQuery, apiKey); // Pass user's API key
             setSearchResults(data);
             setLoadingSearch(false);
+            setErrorSearch('')
         } catch (error) {
-            console.log(error.message)
             console.error('Error fetching search results:', error);
             setLoadingSearch(false);
+            setErrorSearch(error.message);
+            console.log(searchResults);
+            console.log(error.message)
         }
     };
 
@@ -96,6 +100,10 @@ function Dashboard() {
 
     const closeSearchResults = () => {
         setSearchResults([]);
+    }
+
+    const closeErrorResults = () => {
+        setErrorSearch('')
     }
 
     return (
@@ -163,13 +171,14 @@ function Dashboard() {
                         </Row>
                 </Container>
                 :
-                <Container>
-                    <Row>
-                        <Col>
-                            {error}
-                        </Col>
-                    </Row>
-                </Container>
+               errorSearch &&  <Container className='search_results'>
+               <Row className='mt-2'><Col><Button onClick={closeErrorResults}>Close</Button></Col></Row>
+               <Row className='align-items-center justify-content-center' style={{height:'100%'}}>
+                   <Col xs ='auto'>
+                      <p><b>{errorSearch}</b></p>
+                   </Col>
+               </Row>
+           </Container>
             }
 
             <Container>

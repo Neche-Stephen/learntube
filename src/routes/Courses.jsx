@@ -31,7 +31,7 @@ function Courses() {
             );
             if (!response.ok) {
                 if (response.status === 403) {
-                    throw new Error('Forbidden: You are not authorized to access this resource.');
+                    throw new Error('Forbidden: You are not authorized to access this resource. Quota for API possibly exhausted');
                 
                 } else {
                     throw new Error('Failed to fetch data.');
