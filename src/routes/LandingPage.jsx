@@ -22,7 +22,7 @@ export default function LandingPage() {
             <Container>
                 <Row className='mt-4 mb-4'>
                     <Col>
-                        Use Learntube to learn any course, Use the form below to choose
+                        Use Learntube to learn any course, Choose course below
                     </Col>
                 </Row>
 

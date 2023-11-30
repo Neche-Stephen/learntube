@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import {Container, Row, Col, Card }from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
@@ -15,21 +15,6 @@ function Projects() {
     const [searchResults, setSearchResults] = useState([]);
 
     const API_KEY = 'AIzaSyDXtmxIH638wwtXK5Ly7AkOp1NoffKEx2M';
-
-    const handleSearch = async (e) => {
-        e.preventDefault();
-
-        try {
-            const response = await fetch(
-                `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=${searchQuery}&key=${API_KEY}`
-            );
-            const data = await response.json();
-            console.log('worked')
-            setSearchResults(data.items);
-        } catch (error) {
-            console.error('Error fetching search results:', error);
-        }
-    };
 
     const showVideoDetails = (videoId) => {
         // Handle showing video details or navigating to video page
@@ -61,7 +46,7 @@ function Projects() {
         <>
             <Navbar expand="lg" className="bg-body-tertiary">
                 <Container fluid>
-                    <Navbar.Brand href="#">Learntube</Navbar.Brand>
+                    <Navbar.Brand as={Link} to="/">Learntube</Navbar.Brand>
                     <Navbar.Toggle aria-controls="navbarScroll" />
                     <Navbar.Collapse id="navbarScroll">
                     <Nav
@@ -69,19 +54,9 @@ function Projects() {
                         style={{ maxHeight: '100px' }}
                         navbarScroll
                     >
-                        <Nav.Link href="#action1">Home</Nav.Link>
+                        <Nav.Link as={Link} to="/">Home</Nav.Link>
                     </Nav>
-                    <Form  onSubmit={handleSearch} className="d-flex">
-                        <Form.Control
-                        type="search"
-                        placeholder="Search"
-                        className="me-2"
-                        aria-label="Search"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                        <Button type="submit" variant="outline-success">Search</Button>
-                    </Form>
+                   
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
@@ -95,7 +70,7 @@ function Projects() {
                 </Row>
                 <Row className=''>
                     {searchResults.map((item) => (
-                    <Col xs ="3" key={item.id.videoId} className='mb-2'>
+                    <Col sm = '6' lg ="3" key={item.id.videoId} className='mb-2'>
                         <a className='course_card' href={`https://www.youtube.com/watch?v=${item.id.videoId}`} target='_blank' rel="noreferrer" onClick={() => showVideoDetails(item.id.videoId)}>
                         <Card>
                             <Card.Img variant="top" src={item.snippet.thumbnails.default.url} alt={item.snippet.title}  />
