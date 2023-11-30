@@ -10,6 +10,20 @@
     height: 400px;
 }
 
+@media(max-width:991px){
+    .search_results{
+        width: 60% !important;
+    }
+}
+
+@media(max-width:575px){
+    .search_results{
+        width: 70% !important;
+        left:50px ;
+    }
+}
+
+
 .utube_card{
     text-decoration: none;
     min-height: 100%;
@@ -25,4 +39,8 @@
     text-decoration: none;
     min-height: 100%;
     width: 100%;
+}
+
+.video_info{
+    text-decoration: none;
 }

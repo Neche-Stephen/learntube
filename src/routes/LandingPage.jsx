@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar/Navbar';
 import { Container, Row, Col, Form, Button} from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 export default function LandingPage() {
     const [course, setCourse] = useState('');
@@ -29,7 +29,7 @@ export default function LandingPage() {
                 <Row>
                     <Col xs='auto'>
                         <Form onSubmit={handleSubmit}>
-                            <Form.Select aria-label="Default select example" value={course} onChange={handleChange}>
+                            <Form.Select aria-label="Default select example" value={course} onChange={handleChange} required>
                                 <option value="">Select course to learn</option>
                                 <option value="Reactjs">Reactjs</option>
                                 <option value="HTML">HTML</option>

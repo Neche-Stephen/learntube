@@ -9640,10 +9640,10 @@ utils-merge@1.0.1:
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM=
 
-utubeapi-wrap@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/utubeapi-wrap/-/utubeapi-wrap-1.1.2.tgz#ad8260da3bb2122463444a7d0975e7d9616f98fb"
-  integrity sha512-zN5beN22M90IpWZSEQTx5KQKE2yV7mX2/jLn5KM83ifUe7dCQScwsrQdiE0GhNnQrQ8sTOR+vksf/HNSXWvYUw==
+utubeapi-wrap@^1.1.8:
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/utubeapi-wrap/-/utubeapi-wrap-1.1.8.tgz#693ed8e9c244297d1a6d8ee9c04d2eabbc4976dd"
+  integrity sha512-HQ3eEev5L/vXW7jjtnYob9z0mSoP5+h+1rFqe0J/M++q+SYssrDP/ViCdjFGie/7Jzn+UL9s+nBu11w2lSmkCg==
 
 uuid@^8.3.2:
   version "8.3.2"
