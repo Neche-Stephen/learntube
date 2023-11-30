@@ -31,6 +31,7 @@ export default function LandingPage() {
                         <Form onSubmit={handleSubmit}>
                             <Form.Select aria-label="Default select example" value={course} onChange={handleChange} required>
                                 <option value="">Select course to learn</option>
+                                <option value="Flutter">Flutter</option>
                                 <option value="Reactjs">Reactjs</option>
                                 <option value="HTML">HTML</option>
                                 <option value="CSS">CSS</option>
